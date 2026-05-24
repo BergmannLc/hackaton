@@ -4,3 +4,24 @@
 @tailwind utilities;
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Long Shot';
+  src: url('./assets/fonts/Long_Shot.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer utilities {
+  .font-longshot {
+    font-family: 'Long Shot', sans-serif;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
