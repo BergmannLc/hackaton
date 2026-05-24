@@ -1,76 +1,67 @@
 /**
  * JSDoc definitions for User entity.
- * 
+ *
  * @typedef {"aluno" | "credenciado"} RoleEnum
- * 
+ *
  * @typedef {Object} UserFormData
- * @property {string} [name] - Full name of the user.
- * @property {string} [nome] - Full name of the user (alternative).
- * @property {string} [matricula] - Enrollment id/registration number.
- * @property {string} [siape] - Professor ID/SIAPE.
- * @property {string} [password] - User password.
- * @property {string} [senha] - User password (alternative).
- * @property {RoleEnum | "professor"} [role] - User role from frontend.
- * @property {RoleEnum | "professor"} [roles] - User role from frontend (alternative).
- * 
- * @typedef {Object} UserRequest
- * @property {string} nome - Name of the user.
- * @property {string} matricula - Unique identification number.
- * @property {string} senha - Password credentials.
- * @property {RoleEnum} roles - User access level role.
- * 
+ * @property {string} [name]
+ * @property {string} [nome]
+ * @property {string} [matricula]
+ * @property {string} [siape]
+ * @property {string} [password]
+ * @property {string} [senha]
+ * @property {number} [curso_id]
+ * @property {number} [cursoId]
+ *
+ * @typedef {Object} AlunoRequest
+ * @property {string} nome
+ * @property {string} matricula
+ * @property {string} senha
+ * @property {number} curso_id
+ *
+ * @typedef {Object} CredenciadoRequest
+ * @property {string} nome
+ * @property {string} matricula
+ * @property {string} senha
+ *
  * @typedef {Object} UserResponse
- * @property {number} id - Unique identifier of the user.
- * @property {string} nome - Name of the user.
- * @property {string} matricula - Unique identification number.
- * @property {RoleEnum} roles - User access level role.
+ * @property {number} id
+ * @property {string} nome
+ * @property {string} matricula
+ * @property {RoleEnum} roles
  */
-
-/**
- * Maps the frontend role value to the strict backend RoleEnum.
- * 
- * @param {string} roleValue 
- * @returns {RoleEnum}
- */
-function mapRole(roleValue) {
-  if (roleValue === 'professor' || roleValue === 'credenciado') {
-    return 'credenciado';
-  }
-  return 'aluno';
-}
 
 export const UserFactory = {
   /**
-   * Builds the payload to create a new User.
-   * 
-   * @param {UserFormData} formData - The frontend form data.
-   * @returns {UserRequest} The exact payload for POST request.
+   * Builds the payload to create a new Aluno.
+   * Endpoint: POST /users/create/aluno
+   *
+   * @param {UserFormData} formData
+   * @returns {AlunoRequest}
    */
-  buildUserForCreate(formData) {
-    const rawRole = formData.roles || formData.role || 'aluno';
+  buildAlunoForCreate(formData) {
     return {
       nome: formData.name || formData.nome || '',
-      matricula: formData.matricula || formData.siape || '',
+      matricula: formData.matricula || '',
       senha: formData.password || formData.senha || '',
-      roles: mapRole(rawRole),
+      curso_id: parseInt(formData.curso_id || formData.cursoId || 0, 10),
     };
   },
 
   /**
-   * Builds the payload to update an existing User.
-   * 
-   * @param {UserFormData} formData - The frontend form data.
-   * @returns {UserRequest} The exact payload for PATCH request.
+   * Builds the payload to create a new Credenciado (professor/admin).
+   * Endpoint: POST /users/create/credenciado (requires credenciado JWT)
+   *
+   * @param {UserFormData} formData
+   * @returns {CredenciadoRequest}
    */
-  buildUserForUpdate(formData) {
-    const rawRole = formData.roles || formData.role || 'aluno';
+  buildCredenciadoForCreate(formData) {
     return {
       nome: formData.name || formData.nome || '',
       matricula: formData.matricula || formData.siape || '',
       senha: formData.password || formData.senha || '',
-      roles: mapRole(rawRole),
     };
-  }
+  },
 };
 
 export default UserFactory;

@@ -4,8 +4,9 @@ import EventoFactory from '../factories/EventoFactory';
 import toast from 'react-hot-toast';
 
 /**
- * Custom hook for Evento CRUD operations.
- * Handles loading states, errors, API requests, and maps data via EventoFactory.
+ * Custom hook for Evento operations (list, get, create, delete).
+ * The backend does NOT expose PATCH /eventos/{id} for partial updates,
+ * so no `updateEvento` is provided.
  */
 export function useEvento() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,21 +14,15 @@ export function useEvento() {
   const [eventos, setEventos] = useState([]);
   const [evento, setEvento] = useState(null);
 
-  /**
-   * Safe wrapper to handle request errors.
-   */
   const handleError = useCallback((err) => {
-    const errorMessage = err.response?.data?.detail || err.message || 'Erro ao processar requisição do evento.';
+    const errorMessage =
+      err.response?.data?.detail || err.message || 'Erro ao processar requisicao do evento.';
     setError(errorMessage);
     toast.error(errorMessage);
     throw err;
   }, []);
 
-  /**
-   * Fetches all events.
-   * 
-   * @returns {Promise<import('../factories/EventoFactory').EventoResponse[]>}
-   */
+  /** GET /eventos/ */
   const fetchEventos = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -42,12 +37,7 @@ export function useEvento() {
     }
   }, [handleError]);
 
-  /**
-   * Fetches a single event by ID.
-   * 
-   * @param {number} id - Event ID.
-   * @returns {Promise<import('../factories/EventoFactory').EventoResponse>}
-   */
+  /** GET /eventos/{id} */
   const fetchEventoById = useCallback(async (id) => {
     setIsLoading(true);
     setError(null);
@@ -62,12 +52,7 @@ export function useEvento() {
     }
   }, [handleError]);
 
-  /**
-   * Creates a new event. Maps data with EventoFactory.
-   * 
-   * @param {import('../factories/EventoFactory').EventoFormData} formData - Form data from frontend.
-   * @returns {Promise<import('../factories/EventoFactory').EventoResponse>}
-   */
+  /** POST /eventos/create  (requires credenciado JWT) */
   const createEvento = useCallback(async (formData) => {
     setIsLoading(true);
     setError(null);
@@ -83,40 +68,13 @@ export function useEvento() {
     }
   }, [handleError]);
 
-  /**
-   * Updates an existing event. Maps data with EventoFactory.
-   * 
-   * @param {number} id - Event ID to update.
-   * @param {import('../factories/EventoFactory').EventoFormData} formData - Form data to update.
-   * @returns {Promise<import('../factories/EventoFactory').EventoResponse>}
-   */
-  const updateEvento = useCallback(async (id, formData) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const payload = EventoFactory.buildEventoForUpdate(formData);
-      const response = await apiClient.eventos.update(id, payload);
-      toast.success('Evento atualizado com sucesso!');
-      return response.data;
-    } catch (err) {
-      handleError(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [handleError]);
-
-  /**
-   * Deletes an event.
-   * 
-   * @param {number} id - Event ID.
-   * @returns {Promise<{message: string}>}
-   */
+  /** DELETE /eventos/{id}  (requires credenciado JWT) */
   const deleteEvento = useCallback(async (id) => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await apiClient.eventos.delete(id);
-      toast.success('Evento excluído com sucesso!');
+      toast.success('Evento excluido com sucesso!');
       return response.data;
     } catch (err) {
       handleError(err);
@@ -133,8 +91,7 @@ export function useEvento() {
     fetchEventos,
     fetchEventoById,
     createEvento,
-    updateEvento,
-    deleteEvento
+    deleteEvento,
   };
 }
 

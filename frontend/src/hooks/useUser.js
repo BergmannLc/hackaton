@@ -4,8 +4,9 @@ import UserFactory from '../factories/UserFactory';
 import toast from 'react-hot-toast';
 
 /**
- * Custom hook for User CRUD operations.
- * Handles loading states, errors, API requests, and maps data via UserFactory.
+ * Custom hook for User operations (create aluno/credenciado, list, get, delete).
+ * The backend does NOT expose a generic PATCH /users/{id} update endpoint,
+ * so no `updateUser` is provided here.
  */
 export function useUser() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,21 +14,15 @@ export function useUser() {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState(null);
 
-  /**
-   * Safe wrapper to handle request errors.
-   */
   const handleError = useCallback((err) => {
-    const errorMessage = err.response?.data?.detail || err.message || 'Erro ao processar requisição do usuário.';
+    const errorMessage =
+      err.response?.data?.detail || err.message || 'Erro ao processar requisicao do usuario.';
     setError(errorMessage);
     toast.error(errorMessage);
     throw err;
   }, []);
 
-  /**
-   * Fetches all users.
-   * 
-   * @returns {Promise<import('../factories/UserFactory').UserResponse[]>}
-   */
+  /** GET /users/  (requires JWT) */
   const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -42,12 +37,7 @@ export function useUser() {
     }
   }, [handleError]);
 
-  /**
-   * Fetches a single user by ID.
-   * 
-   * @param {number} id - User ID.
-   * @returns {Promise<import('../factories/UserFactory').UserResponse>}
-   */
+  /** GET /users/{id}  (requires JWT) */
   const fetchUserById = useCallback(async (id) => {
     setIsLoading(true);
     setError(null);
@@ -62,19 +52,14 @@ export function useUser() {
     }
   }, [handleError]);
 
-  /**
-   * Creates a new user. Maps data with UserFactory.
-   * 
-   * @param {import('../factories/UserFactory').UserFormData} formData - Form data from frontend.
-   * @returns {Promise<import('../factories/UserFactory').UserResponse>}
-   */
-  const createUser = useCallback(async (formData) => {
+  /** POST /users/create/aluno  (public) */
+  const createAluno = useCallback(async (formData) => {
     setIsLoading(true);
     setError(null);
     try {
-      const payload = UserFactory.buildUserForCreate(formData);
-      const response = await apiClient.users.create(payload);
-      toast.success('Usuário criado com sucesso!');
+      const payload = UserFactory.buildAlunoForCreate(formData);
+      const response = await apiClient.users.createAluno(payload);
+      toast.success('Aluno cadastrado com sucesso!');
       return response.data;
     } catch (err) {
       handleError(err);
@@ -83,20 +68,14 @@ export function useUser() {
     }
   }, [handleError]);
 
-  /**
-   * Updates an existing user. Maps data with UserFactory.
-   * 
-   * @param {number} id - User ID to update.
-   * @param {import('../factories/UserFactory').UserFormData} formData - Form data to update.
-   * @returns {Promise<import('../factories/UserFactory').UserResponse>}
-   */
-  const updateUser = useCallback(async (id, formData) => {
+  /** POST /users/create/credenciado  (requires credenciado JWT) */
+  const createCredenciado = useCallback(async (formData) => {
     setIsLoading(true);
     setError(null);
     try {
-      const payload = UserFactory.buildUserForUpdate(formData);
-      const response = await apiClient.users.update(id, payload);
-      toast.success('Usuário atualizado com sucesso!');
+      const payload = UserFactory.buildCredenciadoForCreate(formData);
+      const response = await apiClient.users.createCredenciado(payload);
+      toast.success('Credenciado cadastrado com sucesso!');
       return response.data;
     } catch (err) {
       handleError(err);
@@ -105,18 +84,13 @@ export function useUser() {
     }
   }, [handleError]);
 
-  /**
-   * Deletes a user.
-   * 
-   * @param {number} id - User ID.
-   * @returns {Promise<{message: string}>}
-   */
+  /** DELETE /users/{id}  (requires credenciado JWT) */
   const deleteUser = useCallback(async (id) => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await apiClient.users.delete(id);
-      toast.success('Usuário excluído com sucesso!');
+      toast.success('Usuario excluido com sucesso!');
       return response.data;
     } catch (err) {
       handleError(err);
@@ -132,9 +106,9 @@ export function useUser() {
     error,
     fetchUsers,
     fetchUserById,
-    createUser,
-    updateUser,
-    deleteUser
+    createAluno,
+    createCredenciado,
+    deleteUser,
   };
 }
 

@@ -1,58 +1,77 @@
 /**
  * JSDoc definitions for Evento entity.
- * 
+ *
+ * Matches backend/app/dtos/EventoDto.py.
+ *
  * @typedef {Object} EventoFormData
- * @property {number} [id] - Optional ID (if editing).
- * @property {string} title - Title of the event.
- * @property {string} category - Category (e.g. Palestras, Workshops).
- * @property {string} date - Date in YYYY-MM-DD format.
- * @property {string} time - Time string (e.g. "14:00 - 16:00").
- * @property {string} location - Location description.
- * @property {number} hours - Number of certified hours.
- * @property {number} spots - Maximum number of spots.
- * @property {string} speaker - Name of the speaker.
- * @property {string} description - Detailed description.
- * @property {string} image - Cover image URL.
- * @property {string[]} courses - List of recommended courses.
- * @property {number} [enrolled] - Count of enrolled users.
- * @property {boolean} [isEnrolled] - Whether current user is enrolled.
- * 
+ * @property {number}   [id]
+ * @property {string}   [title]
+ * @property {string}   [nome]
+ * @property {string}   [category]
+ * @property {string}   [tipo]
+ * @property {string}   [date]
+ * @property {string}   [data]
+ * @property {string}   [time]
+ * @property {string}   [hora_inicio]
+ * @property {string}   [hora_fim]
+ * @property {string}   [location]
+ * @property {string}   [local]
+ * @property {string}   [speaker]
+ * @property {string}   [palestrante]
+ * @property {string}   [description]
+ * @property {string}   [descricao]
+ * @property {string}   [image]
+ * @property {string}   [imagem]
+ * @property {number}   [hours]
+ * @property {number}   [horas]
+ * @property {number}   [spots]
+ * @property {number}   [max_user]
+ * @property {number[]} [curso_ids]
+ *
  * @typedef {Object} EventoRequest
- * @property {string} nome - Backend field mapping to title/nome.
- * @property {string} data - ISO 8601 formatted datetime string.
- * @property {number} max_user - Backend field mapping to spots/max_user.
- * 
+ * @property {string}   nome
+ * @property {string}   [descricao]
+ * @property {string}   [local]
+ * @property {string}   [palestrante]
+ * @property {string}   [tipo]
+ * @property {string}   data
+ * @property {string}   [hora_inicio]
+ * @property {string}   [hora_fim]
+ * @property {number}   [horas]
+ * @property {string}   [imagem]
+ * @property {number}   max_user
+ * @property {number[]} curso_ids
+ *
  * @typedef {Object} EventoResponse
- * @property {number} id - Unique identifier of the event.
- * @property {string} nome - Name of the event.
- * @property {string} data - ISO 8601 formatted datetime string.
- * @property {number} max_user - Maximum number of participants.
+ * @property {number}   id
+ * @property {string}   nome
+ * @property {string}   [descricao]
+ * @property {string}   [local]
+ * @property {string}   [palestrante]
+ * @property {string}   [tipo]
+ * @property {string}   data
+ * @property {string}   [hora_inicio]
+ * @property {string}   [hora_fim]
+ * @property {number}   [horas]
+ * @property {string}   [imagem]
+ * @property {number}   max_user
  */
 
-/**
- * Helper to safely combine date and start time into an ISO 8601 datetime string.
- * 
- * @param {string} dateStr - Date string (YYYY-MM-DD)
- * @param {string} timeStr - Time string (e.g. "14:00 - 16:00")
- * @returns {string} ISO datetime string.
- */
-function convertToISODate(dateStr, timeStr) {
+function splitTime(timeStr) {
+  if (!timeStr || typeof timeStr !== 'string') return [null, null];
+  const parts = timeStr.split('-').map((p) => p.trim());
+  const isValid = (t) => /^\d{1,2}:\d{2}$/.test(t);
+  const start = isValid(parts[0]) ? parts[0].padStart(5, '0') : null;
+  const end = parts[1] && isValid(parts[1]) ? parts[1].padStart(5, '0') : null;
+  return [start, end];
+}
+
+function toIsoDate(dateStr, timeStr) {
   try {
     if (!dateStr) return new Date().toISOString();
-    
-    // Extract the start time from something like "14:00 - 16:00"
-    const startTime = timeStr ? timeStr.split('-')[0].trim() : '12:00';
-    
-    // Validate HH:MM format
-    const timeMatch = startTime.match(/^(\d{1,2}):(\d{2})$/);
-    let hh = '12';
-    let mm = '00';
-    if (timeMatch) {
-      hh = timeMatch[1].padStart(2, '0');
-      mm = timeMatch[2];
-    }
-    
-    const dateObj = new Date(`${dateStr}T${hh}:${mm}:00`);
+    const [start] = splitTime(timeStr);
+    const hhmm = start || '12:00';
+    const dateObj = new Date(`${dateStr}T${hhmm}:00`);
     return isNaN(dateObj.getTime()) ? new Date().toISOString() : dateObj.toISOString();
   } catch {
     return new Date().toISOString();
@@ -62,31 +81,33 @@ function convertToISODate(dateStr, timeStr) {
 export const EventoFactory = {
   /**
    * Builds the payload to create a new Evento.
-   * 
-   * @param {EventoFormData} formData - The frontend form data.
-   * @returns {EventoRequest} The exact payload for POST request.
+   * Endpoint: POST /eventos/create
+   *
+   * @param {EventoFormData} formData
+   * @returns {EventoRequest}
    */
   buildEventoForCreate(formData) {
+    const [horaInicio, horaFim] = splitTime(formData.time);
     return {
       nome: formData.title || formData.nome || '',
-      data: convertToISODate(formData.date, formData.time),
+      descricao: formData.description || formData.descricao || undefined,
+      local: formData.location || formData.local || undefined,
+      palestrante: formData.speaker || formData.palestrante || undefined,
+      tipo: formData.category || formData.tipo || undefined,
+      data: formData.data || toIsoDate(formData.date, formData.time),
+      hora_inicio: formData.hora_inicio || horaInicio || undefined,
+      hora_fim: formData.hora_fim || horaFim || undefined,
+      horas:
+        formData.hours != null
+          ? parseInt(formData.hours, 10)
+          : formData.horas != null
+            ? parseInt(formData.horas, 10)
+            : undefined,
+      imagem: formData.image || formData.imagem || undefined,
       max_user: parseInt(formData.spots || formData.max_user || 0, 10),
+      curso_ids: Array.isArray(formData.curso_ids) ? formData.curso_ids : [],
     };
   },
-
-  /**
-   * Builds the payload to update an existing Evento.
-   * 
-   * @param {EventoFormData} formData - The frontend form data.
-   * @returns {EventoRequest} The exact payload for PATCH request.
-   */
-  buildEventoForUpdate(formData) {
-    return {
-      nome: formData.title || formData.nome || '',
-      data: convertToISODate(formData.date, formData.time),
-      max_user: parseInt(formData.spots || formData.max_user || 0, 10),
-    };
-  }
 };
 
 export default EventoFactory;
