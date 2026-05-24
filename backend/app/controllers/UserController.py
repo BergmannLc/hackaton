@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.database.db import get_db
 from app.database.repositories.UserRepository import UserRepository
 from app.services.UserService import UserService
-from app.dtos.UserDto import UserRequest, UserResponse
+from app.dtos.UserDto import AlunoRequest, CredenciadoRequest, UserResponse
 from app.services.TokenService import get_current_user, require_credenciado
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -20,13 +20,21 @@ def find_all(service: UserService = Depends(get_service), current_user = Depends
 def find_by_id(id: int, service: UserService = Depends(get_service), current_user = Depends(get_current_user)):
     return service.find_by_id(id)
 
-@router.post("/create", response_model=UserResponse)
-def create(request: UserRequest, service: UserService = Depends(get_service)):
-    return service.create(
+@router.post("/create/aluno", response_model=UserResponse)
+def create_aluno(request: AlunoRequest, service: UserService = Depends(get_service)):
+    return service.create_aluno(
         nome=request.nome,
         matricula=request.matricula,
         senha=request.senha,
-        roles=request.roles
+        curso_id=request.curso_id
+    )
+
+@router.post("/create/credenciado", response_model=UserResponse)
+def create_credenciado(request: CredenciadoRequest, service: UserService = Depends(get_service), current_user = Depends(require_credenciado)):
+    return service.create_credenciado(
+        nome=request.nome,
+        matricula=request.matricula,
+        senha=request.senha
     )
 
 @router.delete("/{id}")
