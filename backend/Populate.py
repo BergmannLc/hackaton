@@ -6,15 +6,15 @@ os.environ['LANG'] = 'C'
 import bcrypt
 from app.database.db import SessionLocal
 from app.database.models.UserEntity import User, RoleEnum
+from app.database.models.Cursos import Cursos
 
 def create_admin():
     db = SessionLocal()
     try:
-        hashed_senha = bcrypt.hashpw("admin123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         admin = User(
             nome="Admin",
             matricula="admin",
-            senha=hashed_senha,
+            senha=bcrypt.hashpw("admin123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
             roles=RoleEnum.credenciado
         )
         db.add(admin)
@@ -23,5 +23,25 @@ def create_admin():
     finally:
         db.close()
 
+def create_cursos():
+    db = SessionLocal()
+    try:
+        cursos = [
+            "Engenharia de Software",
+            "Engenharia Civil",
+            "Sistema da informação",
+            "Nutrição",
+            "Biomedicina"
+            "Design",
+            "Engenharia mecanica",
+        ]
+        for nome in cursos:
+            curso = Cursos(nome=nome)
+            db.add(curso)
+        db.commit()
+        print("Cursos criados com sucesso!")
+    finally:
+        db.close()
+
 if __name__ == "__main__":
-    create_admin()
+    create_cursos()

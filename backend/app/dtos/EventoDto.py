@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 class EventoRequest(BaseModel):
     nome: str
@@ -11,8 +11,10 @@ class EventoRequest(BaseModel):
     data: datetime
     hora_inicio: Optional[str] = None
     hora_fim: Optional[str] = None
+    horas: Optional[int] = None
     imagem: Optional[str] = None
     max_user: int
+    curso_ids: List[int] = Field(default_factory=list)
 
 class EventoResponse(BaseModel):
     id: int
@@ -24,6 +26,7 @@ class EventoResponse(BaseModel):
     data: datetime
     hora_inicio: Optional[str] = None
     hora_fim: Optional[str] = None
+    horas: Optional[int] = None
     imagem: Optional[str] = None
     max_user: int
 
