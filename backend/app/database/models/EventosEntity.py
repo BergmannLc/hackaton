@@ -13,6 +13,7 @@ class Eventos(Base):
     data = Column(DateTime, nullable=False)
     hora_inicio = Column(String, nullable=True)
     hora_fim = Column(String, nullable=True)
+    horas = Column(Integer, nullable=True)
     imagem = Column(String, nullable=True)
     max_user = Column(Integer, nullable=False)
     qr_token = Column(String, nullable=True)
