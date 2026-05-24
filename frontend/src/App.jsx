@@ -52,14 +52,18 @@ function App() {
   };
 
   const handleEnroll = (eventId) => {
-    setEvents(events.map(event => {
+    setEvents(prevEvents => prevEvents.map(event => {
       if (event.id === eventId) {
         if (event.isEnrolled) {
           toast('Inscrição cancelada.');
-          return { ...event, isEnrolled: false, enrolled: event.enrolled - 1 };
+          const updatedEvent = { ...event, isEnrolled: false, enrolled: event.enrolled - 1 };
+          if (selectedEvent?.id === eventId) setSelectedEvent(updatedEvent);
+          return updatedEvent;
         } else if (event.enrolled < event.spots) {
           toast.success('Inscrição confirmada com sucesso!');
-          return { ...event, isEnrolled: true, enrolled: event.enrolled + 1 };
+          const updatedEvent = { ...event, isEnrolled: true, enrolled: event.enrolled + 1 };
+          if (selectedEvent?.id === eventId) setSelectedEvent(updatedEvent);
+          return updatedEvent;
         }
       }
       return event;

@@ -1,8 +1,9 @@
-import React from 'react';
-import { X, CalendarDays, MapPin, Award, Timer, Lightbulb, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, CalendarDays, MapPin, Award, Timer, Lightbulb, User, QrCode } from 'lucide-react';
 import { Badge } from '../Badge';
 import { getDaysDifference } from '../../services/mocks';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { QRScannerModal } from './QRScannerModal';
 
 export const EventModal = ({ event, onClose, onEnroll }) => {
   if (!event) return null;
@@ -10,6 +11,8 @@ export const EventModal = ({ event, onClose, onEnroll }) => {
   const daysUntil = getDaysDifference(event.date);
   const isApproaching = daysUntil >= 0 && daysUntil <= 2;
   const isPast = daysUntil < 0;
+
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
@@ -72,7 +75,12 @@ export const EventModal = ({ event, onClose, onEnroll }) => {
              <div className="w-full sm:w-48 bg-slate-800 rounded-full h-2 overflow-hidden"><div className={`h-full rounded-full ${isFull ? 'bg-rose-500' : isApproaching ? 'bg-amber-500' : 'bg-indigo-500'}`} style={{ width: `${(event.enrolled / event.spots) * 100}%` }}></div></div>
              <div className="text-xs text-slate-400 mt-1 font-medium"><span className="text-white">{event.enrolled}</span> / {event.spots} inscritos</div>
           </div>
-          <div className="flex gap-3 w-full sm:w-auto">
+          <div className="flex gap-3 w-full sm:w-auto flex-col sm:flex-row">
+            {event.isEnrolled && (isApproaching || isPast) && (
+               <button onClick={() => setIsScannerOpen(true)} className="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold bg-emerald-500 hover:bg-emerald-400 text-white shadow-sm flex items-center justify-center gap-2 transition-colors">
+                 <QrCode size={18}/> Registrar Presença
+               </button>
+            )}
             {!isPast && (
               <button onClick={() => onEnroll(event.id)} disabled={isFull && !event.isEnrolled}
                 className={`flex-1 sm:flex-none px-8 py-3 rounded-xl font-bold transition-all shadow-sm ${event.isEnrolled ? 'bg-slate-800 text-slate-300 hover:bg-rose-500/10 hover:text-rose-400 border border-slate-700' : isFull ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700' : isApproaching ? 'bg-amber-500 text-slate-950 hover:bg-amber-400' : 'bg-indigo-600 text-white hover:bg-indigo-500'}`}
@@ -83,6 +91,10 @@ export const EventModal = ({ event, onClose, onEnroll }) => {
           </div>
         </div>
       </motion.div>
+
+      <AnimatePresence>
+         {isScannerOpen && <QRScannerModal event={event} onClose={() => setIsScannerOpen(false)} onScanSuccess={() => {}} />}
+      </AnimatePresence>
     </div>
   );
 };

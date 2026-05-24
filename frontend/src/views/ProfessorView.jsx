@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { CalendarDays, Plus, Edit2, MapPin, User, FileCheck, Lightbulb, CheckCircle, Inbox, ThumbsUp, Trash2, CalendarPlus, LogOut, Check, Eye, Award, FileText, Timer, MessageSquare } from 'lucide-react';
+import { CalendarDays, Plus, Edit2, MapPin, User, FileCheck, Lightbulb, CheckCircle, Inbox, ThumbsUp, Trash2, CalendarPlus, LogOut, Check, Eye, Award, FileText, Timer, MessageSquare, QrCode } from 'lucide-react';
 import { Badge } from '../components/Badge';
 import { EventFormModal } from '../components/modals/EventFormModal';
+import { AttendanceProfModal } from '../components/modals/AttendanceProfModal';
 import { MOCK_PROF } from '../services/mocks';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -30,6 +31,9 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, certs, s
 
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  
+  const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
+  const [attendanceEvent, setAttendanceEvent] = useState(null);
 
   const handleSaveEvent = (eventData) => {
     if (eventData.id) {
@@ -99,9 +103,14 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, certs, s
                        <p className="flex items-center gap-2"><MapPin size={14}/> {event.location}</p>
                        <p className="flex items-center gap-2"><User size={14}/> {event.enrolled} / {event.spots} inscritos</p>
                      </div>
-                     <button onClick={() => {setEditingEvent(event); setIsEventModalOpen(true);}} className="mt-auto w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm border border-slate-700">
-                       <Edit2 size={16}/> Editar Evento
-                     </button>
+                     <div className="mt-auto grid grid-cols-2 gap-2">
+                       <button onClick={() => {setAttendanceEvent(event); setIsAttendanceModalOpen(true);}} className="w-full py-2 bg-indigo-600/10 text-indigo-400 hover:bg-indigo-600 hover:text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm border border-indigo-500/20 shadow-sm">
+                         <QrCode size={16}/> Presença
+                       </button>
+                       <button onClick={() => {setEditingEvent(event); setIsEventModalOpen(true);}} className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm border border-slate-700">
+                         <Edit2 size={16}/> Editar
+                       </button>
+                     </div>
                    </div>
                 </motion.div>
               ))}
@@ -109,6 +118,7 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, certs, s
          </div>
          <AnimatePresence>
            {isEventModalOpen && <EventFormModal event={editingEvent} onClose={() => {setIsEventModalOpen(false); setEditingEvent(null);}} onSave={handleSaveEvent} />}
+           {isAttendanceModalOpen && <AttendanceProfModal event={attendanceEvent} onClose={() => {setIsAttendanceModalOpen(false); setAttendanceEvent(null);}} onUpdateEvent={handleSaveEvent} />}
          </AnimatePresence>
       </motion.div>
     );
