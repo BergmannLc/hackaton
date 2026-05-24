@@ -4,6 +4,7 @@ from app.database.db import get_db
 from app.database.repositories.EventoRepository import EventoRepository
 from app.services.EventoService import EventoService
 from app.dtos.EventoDto import EventoRequest, EventoResponse
+from app.services.TokenService import get_current_user, require_credenciado
 
 router = APIRouter(prefix="/eventos", tags=["Eventos"])
 
@@ -20,7 +21,7 @@ def find_by_id(id: int, service: EventoService = Depends(get_service)):
     return service.find_by_id(id)
 
 @router.post("/create", response_model=EventoResponse)
-def create(request: EventoRequest, service: EventoService = Depends(get_service)):
+def create(request: EventoRequest, service: EventoService = Depends(get_service), current_user = Depends(require_credenciado)):
     return service.create(
         nome=request.nome,
         data=request.data,
@@ -28,6 +29,6 @@ def create(request: EventoRequest, service: EventoService = Depends(get_service)
     )
 
 @router.delete("/{id}")
-def delete(id: int, service: EventoService = Depends(get_service)):
+def delete(id: int, service: EventoService = Depends(get_service), current_user = Depends(require_credenciado)):
     service.delete(id)
     return {"message": "Evento deletado com sucesso"}
