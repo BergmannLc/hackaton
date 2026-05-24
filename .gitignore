@@ -1,0 +1,7 @@
+.env
+.envNew-Item
+.idea/
+__pycache__/
+*.pyc
+.venv/
+venv/
