@@ -12,7 +12,7 @@ export const QRScannerModal = ({ event, onClose, onScanSuccess }) => {
     
     try {
       const data = JSON.parse(text);
-      if (data.eventId === event.id && data.secret === 'flowup-hackathon-2024') {
+      if (data.eventId === event.id && data.secret === 'flowup-eventos-2024') {
         setStatus('loading');
         // Simula o delay de validar na API
         setTimeout(() => {

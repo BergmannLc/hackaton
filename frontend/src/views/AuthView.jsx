@@ -88,24 +88,13 @@ export const AuthView = ({ onLogin }) => {
                 </div>
               </div>
               {role === 'aluno' && (
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Curso</label>
-                    <select required defaultValue="" className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all appearance-none text-sm">
-                      <option value="" disabled>Selecione</option>
-                      <option value="Engenharia de Software">Engenharia de Software</option>
-                      <option value="Engenharia Civil">Engenharia Civil</option>
-                      <option value="Ciência da Computação">Ciência da Computação</option>
-                      <option value="Design">Design</option>
-                    </select>
-                  </div>
-                  <div className="w-[100px]">
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Período</label>
-                    <select required defaultValue="" className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all appearance-none text-sm">
-                      <option value="" disabled>-</option>
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(p => <option key={p} value={p}>{p}º</option>)}
-                    </select>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Curso</label>
+                  <select required defaultValue="" className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all appearance-none text-sm">
+                    <option value="" disabled>Selecione</option>
+                    <option value="Engenharia de Software">Engenharia de Software</option>
+                    <option value="Sistemas de Informação">Sistemas de Informação</option>
+                  </select>
                 </div>
               )}
               <div>

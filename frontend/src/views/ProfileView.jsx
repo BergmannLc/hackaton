@@ -42,7 +42,7 @@ export const ProfileView = ({ user, events, suggestions, onAddSuggestion, onEven
         <div className="flex-1 relative z-10 pt-2">
           <h1 className="text-2xl font-bold text-white">{user.name}</h1>
           <p className="text-indigo-400 font-medium mb-1">{user.course}</p>
-          <p className="text-slate-400 text-sm">{user.semester} • Matrícula: 2023001</p>
+          <p className="text-slate-400 text-sm">Matrícula: 2023001</p>
         </div>
       </section>
 

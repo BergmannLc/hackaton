@@ -15,7 +15,7 @@ export const AttendanceProfModal = ({ event, onClose, onUpdateEvent }) => {
     { id: 4, name: 'Ana Beatriz', matricula: '2023004', isPresent: event.presentStudents?.includes(4) }
   ]);
 
-  const qrValue = JSON.stringify({ eventId: event.id, secret: 'flowup-hackathon-2024' });
+  const qrValue = JSON.stringify({ eventId: event.id, secret: 'flowup-eventos-2024' });
 
   const togglePresence = (studentId) => {
     const newStudentsList = enrolledStudents.map(s => 

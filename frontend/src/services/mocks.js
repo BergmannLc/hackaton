@@ -14,13 +14,12 @@ export const getDaysDifference = (eventDateStr) => {
   return Math.round((eventDate - today) / (1000 * 60 * 60 * 24));
 };
 
-export const CATEGORIES = ["Todos", "Palestras", "Workshops", "Hackathons", "Seminários"];
-export const COURSES = ["Todos", "Engenharia de Software", "Engenharia Civil", "Ciência da Computação", "Design", "Geral"];
+export const CATEGORIES = ["Todos", "Palestras", "Workshops", "Eventos", "Seminários"];
+export const COURSES = ["Todos", "Engenharia de Software", "Sistemas de Informação"];
 
 export const MOCK_USER = {
   name: "Mariana Silva",
   course: "Engenharia de Software",
-  semester: "6º Semestre",
   totalHoursNeeded: 120,
   hoursCompleted: 85,
   avatar: "https://i.pravatar.cc/150?img=5",
@@ -50,7 +49,7 @@ export const INITIAL_EVENTS = [
     description: "Uma visão aprofundada sobre como a Inteligência Artificial está remodelando os processos.",
     image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     isEnrolled: false,
-    courses: ["Engenharia de Software", "Engenharia Civil"]
+    courses: ["Engenharia de Software", "Sistemas de Informação"]
   },
   {
     id: 2,
@@ -66,7 +65,7 @@ export const INITIAL_EVENTS = [
     description: "Aprenda padrões avançados do React, otimização de performance e gerenciamento de estado.",
     image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     isEnrolled: true,
-    courses: ["Engenharia de Software", "Ciência da Computação"]
+    courses: ["Engenharia de Software", "Sistemas de Informação"]
   }
 ];
 
