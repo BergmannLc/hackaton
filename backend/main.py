@@ -11,6 +11,8 @@ from app.controllers.EventoController import router as evento_router
 from app.controllers.CursoController import router as curso_router
 from app.controllers.SugestaoController import router as sugestao_router
 from app.controllers.AuthController import router as auth_router
+from app.controllers.InscricaoController import router as inscricao_router
+from app.controllers.QrCodeController import router as qrcode_router
 
 app = FastAPI()
 
@@ -29,3 +31,5 @@ app.include_router(evento_router)
 app.include_router(curso_router)
 app.include_router(sugestao_router)
 app.include_router(auth_router)
+app.include_router(inscricao_router)
+app.include_router(qrcode_router)
