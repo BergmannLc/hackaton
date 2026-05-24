@@ -10,6 +10,7 @@ import { ProfessorView } from './views/ProfessorView';
 import { EventModal } from './components/modals/EventModal';
 
 import { INITIAL_EVENTS, INITIAL_SUGGESTIONS, INITIAL_CERTS } from './services/mocks';
+import logoFlowUp from './assets/logoFlowUp.png';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -112,12 +113,9 @@ function App() {
 
       <header className="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/50 px-4 h-[72px] md:h-[88px] flex items-center sm:px-8">
         <div className="max-w-7xl mx-auto flex justify-between items-center w-full">
-          <h1 className="text-xl md:text-2xl font-longshot text-white flex items-center gap-2 tracking-wide">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </div>
-            Flow<span className="text-indigo-500">Up</span>
-          </h1>
+          <div className="flex items-center">
+            <img src={logoFlowUp} alt="FlowUp Logo" className="h-16 md:h-20 w-auto object-contain drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
+          </div>
           {userRole === 'aluno' && user && (
             <div onClick={() => setActiveTab('perfil')} className={`w-10 h-10 rounded-full overflow-hidden border-2 cursor-pointer transition-colors ${activeTab === 'perfil' ? 'border-indigo-500' : 'border-slate-700 hover:border-indigo-500'}`}>
               <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />

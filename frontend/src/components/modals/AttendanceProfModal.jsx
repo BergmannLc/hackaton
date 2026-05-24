@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, QrCode, Users, CheckCircle, Circle } from 'lucide-react';
+import { X, QrCode, Users, CheckCircle, Circle, Download } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import toast from 'react-hot-toast';
 
@@ -27,6 +27,36 @@ export const AttendanceProfModal = ({ event, onClose, onUpdateEvent }) => {
     const presentIds = newStudentsList.filter(s => s.isPresent).map(s => s.id);
     onUpdateEvent({ ...event, presentStudents: presentIds });
     toast.success('Lista atualizada com sucesso!');
+  };
+
+  const handleEndEvent = () => {
+    // 1. Gerar arquivo CSV
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Nome,Matrícula,Status\n";
+    enrolledStudents.forEach(student => {
+       const status = student.isPresent ? "Presente" : "Ausente";
+       csvContent += `${student.name},${student.matricula},${status}\n`;
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `lista_presenca_${event.title.replace(/\s+/g, '_')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // 2. Encerrar evento (mudar data para ontem para ele ficar como "Concluído")
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const pastDateStr = yesterday.toISOString().split('T')[0];
+    
+    // Atualiza a data e garante que a lista final está salva
+    const presentIds = enrolledStudents.filter(s => s.isPresent).map(s => s.id);
+    onUpdateEvent({ ...event, date: pastDateStr, presentStudents: presentIds });
+    
+    toast.success('Evento encerrado e lista baixada!');
+    onClose();
   };
 
   return (
@@ -83,6 +113,13 @@ export const AttendanceProfModal = ({ event, onClose, onUpdateEvent }) => {
                </div>
             </motion.div>
           )}
+        </div>
+
+        <div className="p-4 sm:p-6 border-t border-slate-800 bg-slate-950/80 flex justify-end">
+          <button onClick={handleEndEvent} className="w-full sm:w-auto bg-rose-600/10 hover:bg-rose-600 text-rose-500 hover:text-white border border-rose-500/20 font-bold py-3 px-6 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+            <Download size={18} />
+            Encerrar Evento e Baixar Lista
+          </button>
         </div>
       </motion.div>
     </div>

@@ -3,6 +3,7 @@ import { Zap, GraduationCap, Briefcase, Hash, Lock, User, Loader2 } from 'lucide
 import { login } from '../services/auth';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import logoFlowUp from '../assets/logoFlowUp.png';
 
 export const AuthView = ({ onLogin }) => {
   const [mode, setMode] = useState('login');
@@ -37,9 +38,8 @@ export const AuthView = ({ onLogin }) => {
         className="w-full max-w-md bg-slate-900/60 backdrop-blur-2xl rounded-3xl border border-slate-800 shadow-2xl p-6 sm:p-8 relative z-10"
       >
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-2">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20"><Zap className="text-white" size={28} /></div>
-            <span className="font-longshot text-4xl text-white">Flow<span className="text-indigo-500">Up</span></span>
+          <div className="flex items-center">
+            <img src={logoFlowUp} alt="FlowUp Logo" className="h-40 md:h-48 w-auto object-contain drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]" />
           </div>
         </div>
 
