@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, LayoutDashboard, CalendarPlus, CheckSquare } from 'lucide-react';
+import { Home, User, LayoutDashboard, CalendarPlus, CheckSquare, UserPlus } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import { AnimatePresence } from 'framer-motion';
 
@@ -175,6 +175,12 @@ function App() {
                     <CheckSquare size={24} className={activeTab === 'tarefas' ? 'drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]' : ''} />
                     <span className="text-[10px] font-bold mt-1">Tarefas</span>
                     {(suggestions.filter(s => s.status === 'pendente').length) > 0 && <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full animate-pulse"></span>}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveTab('cadastro-professor')} className={`flex flex-col items-center p-2 transition-colors ${activeTab === 'cadastro-professor' ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-300'}`}>
+                    <UserPlus size={24} className={activeTab === 'cadastro-professor' ? 'drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]' : ''} />
+                    <span className="text-[10px] font-bold mt-1">Novo Prof</span>
                   </button>
                 </li>
                 <li>

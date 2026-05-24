@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalendarDays, Plus, Edit2, MapPin, User, Lightbulb, CheckCircle, Inbox, ThumbsUp, Trash2, CalendarPlus, LogOut, Check, Award, Timer, MessageSquare, QrCode } from 'lucide-react';
+import { CalendarDays, Plus, Edit2, MapPin, User, Lightbulb, CheckCircle, Inbox, ThumbsUp, Trash2, CalendarPlus, LogOut, Check, Award, Timer, MessageSquare, QrCode, UserPlus, Hash, Lock, Loader2, Building2 } from 'lucide-react';
 import { Badge } from '../components/Badge';
 import { EventFormModal } from '../components/modals/EventFormModal';
 import { AttendanceProfModal } from '../components/modals/AttendanceProfModal';
@@ -9,6 +9,69 @@ import toast from 'react-hot-toast';
 
 export const ProfessorView = ({ activeTab, onLogout, events, setEvents, suggestions, setSuggestions }) => {
   const [sugTab, setSugTab] = useState('pendentes');
+
+  const [professorsList, setProfessorsList] = useState([
+    {
+      id: 1,
+      name: "Prof. Roberto Costa",
+      department: "Coordenação de TI",
+      avatar: "https://i.pravatar.cc/150?img=11",
+      siape: "123456"
+    },
+    {
+      id: 2,
+      name: "Profa. Ana Lima",
+      department: "Engenharia de Software",
+      avatar: "https://i.pravatar.cc/150?img=47",
+      siape: "654321"
+    }
+  ]);
+
+  const [registerForm, setRegisterForm] = useState({
+    name: '',
+    siape: '',
+    department: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  const handleRegisterProfessor = async (e) => {
+    e.preventDefault();
+    if (registerForm.password !== registerForm.confirmPassword) {
+      toast.error("As senhas não coincidem!");
+      return;
+    }
+
+    setIsRegistering(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const newProf = {
+        id: Date.now(),
+        name: registerForm.name,
+        department: registerForm.department,
+        siape: registerForm.siape,
+        avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70) + 1}`
+      };
+
+      setProfessorsList(prev => [...prev, newProf]);
+      toast.success("Professor cadastrado com sucesso!");
+      
+      setRegisterForm({
+        name: '',
+        siape: '',
+        department: '',
+        password: '',
+        confirmPassword: ''
+      });
+    } catch (err) {
+      toast.error("Erro ao cadastrar professor.");
+    } finally {
+      setIsRegistering(false);
+    }
+  };
   
   const handleApproveSug = (id) => {
     setSuggestions(prev => prev.map(s => s.id === id ? { ...s, status: 'aprovada' } : s));
@@ -40,6 +103,151 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, suggesti
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
     exit: { opacity: 0, y: -20, transition: { duration: 0.3 } }
   };
+
+  if (activeTab === 'cadastro-professor') {
+    return (
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="pb-24 pt-6 px-4 max-w-6xl mx-auto space-y-6"
+      >
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+            <UserPlus className="text-indigo-400" /> Cadastrar Professor
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Adicione novos docentes para gerenciar eventos e coordenar atividades.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Form Column */}
+          <div className="lg:col-span-7 bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl"></div>
+            
+            <form onSubmit={handleRegisterProfessor} className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1.5">Nome Completo</label>
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={18} />
+                  <input
+                    required
+                    type="text"
+                    value={registerForm.name}
+                    onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
+                    placeholder="Nome completo do professor"
+                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1.5">Matrícula / SIAPE</label>
+                  <div className="relative group">
+                    <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={18} />
+                    <input
+                      required
+                      type="text"
+                      value={registerForm.siape}
+                      onChange={(e) => setRegisterForm({ ...registerForm, siape: e.target.value })}
+                      placeholder="SIAPE ou Matrícula"
+                      className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1.5">Departamento</label>
+                  <div className="relative group">
+                    <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={18} />
+                    <input
+                      required
+                      type="text"
+                      value={registerForm.department}
+                      onChange={(e) => setRegisterForm({ ...registerForm, department: e.target.value })}
+                      placeholder="Ex: Engenharia de Software"
+                      className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1.5">Senha</label>
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={18} />
+                    <input
+                      required
+                      type="password"
+                      value={registerForm.password}
+                      onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
+                      placeholder="••••••••"
+                      className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1.5">Confirmar Senha</label>
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={18} />
+                    <input
+                      required
+                      type="password"
+                      value={registerForm.confirmPassword}
+                      onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
+                      placeholder="••••••••"
+                      className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isRegistering}
+                className="w-full mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isRegistering ? (
+                  <Loader2 className="animate-spin" size={20} />
+                ) : (
+                  <>
+                    <UserPlus size={18} /> Cadastrar Docente
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+
+          {/* List Column */}
+          <div className="lg:col-span-5 bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
+            <h3 className="font-bold text-lg text-white">Professores na Plataforma</h3>
+            <p className="text-slate-400 text-xs">Abaixo estão os professores ativos que possuem controle administrativo.</p>
+            
+            <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+              {professorsList.map((prof) => (
+                <div key={prof.id} className="flex items-center gap-4 bg-slate-950/50 hover:bg-slate-950 border border-slate-800/80 hover:border-slate-800 p-4 rounded-2xl transition-all">
+                  <img src={prof.avatar} alt={prof.name} className="w-12 h-12 rounded-xl object-cover border border-slate-800 shadow-sm" />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-white font-bold text-sm truncate">{prof.name}</h4>
+                    <p className="text-amber-400 text-xs font-semibold truncate mt-0.5">{prof.department}</p>
+                    <p className="text-slate-500 text-[10px] mt-0.5">SIAPE: {prof.siape}</p>
+                  </div>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold" title="Ativo">
+                    ✓
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   if (activeTab === 'perfil') {
     return (

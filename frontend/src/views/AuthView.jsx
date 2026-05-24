@@ -48,10 +48,12 @@ export const AuthView = ({ onLogin }) => {
           <button onClick={() => { setRole('professor'); setMode('login') }} className={`flex-1 py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all ${role === 'professor' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}><Briefcase size={18} /> Professor</button>
         </div>
 
-        <div className="flex gap-6 mb-6 border-b border-slate-800/50">
-          <button onClick={() => setMode('login')} className={`pb-3 text-sm font-bold transition-all border-b-2 ${mode === 'login' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Entrar</button>
-          <button onClick={() => setMode('register')} className={`pb-3 text-sm font-bold transition-all border-b-2 ${mode === 'register' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Cadastrar</button>
-        </div>
+        {role === 'aluno' && (
+          <div className="flex gap-6 mb-6 border-b border-slate-800/50">
+            <button onClick={() => setMode('login')} className={`pb-3 text-sm font-bold transition-all border-b-2 ${mode === 'login' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Entrar</button>
+            <button onClick={() => setMode('register')} className={`pb-3 text-sm font-bold transition-all border-b-2 ${mode === 'register' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Cadastrar</button>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'login' ? (
