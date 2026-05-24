@@ -10,6 +10,7 @@ from app.controllers.UserController import router as user_router
 from app.controllers.EventoController import router as evento_router
 from app.controllers.CursoController import router as curso_router
 from app.controllers.SugestaoController import router as sugestao_router
+from app.controllers.AuthController import router as auth_router
 
 app = FastAPI()
 
@@ -27,3 +28,4 @@ app.include_router(user_router)
 app.include_router(evento_router)
 app.include_router(curso_router)
 app.include_router(sugestao_router)
+app.include_router(auth_router)
