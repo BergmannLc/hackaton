@@ -70,9 +70,7 @@ export const INITIAL_EVENTS = [
   }
 ];
 
-export const INITIAL_CERTS = [
-  { id: 101, student: "Lucas Moraes", avatar: "https://i.pravatar.cc/150?img=12", course: "Engenharia de Software", event: "Curso Intensivo de Python (Udemy)", hours: 40, file: "certificado_python.pdf", date: getRelativeDate(-1), status: 'pendente' },
-];
+
 
 export const INITIAL_SUGGESTIONS = [
   { id: 201, student: "Mariana Silva", avatar: "https://i.pravatar.cc/150?img=5", course: "Engenharia de Software", title: "Workshop de Figma Avançado", description: "Muitos alunos têm dificuldade em prototipar. Um workshop focado nisso ajudaria muito.", date: getRelativeDate(0), status: 'pendente' },

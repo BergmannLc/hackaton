@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Camera, BookOpen, Award, Lightbulb, UploadCloud, Calendar, Flame, Clock, CalendarDays, ThumbsUp, Timer, CheckCircle, LogOut } from 'lucide-react';
+import { Camera, BookOpen, Award, Lightbulb, Calendar, Flame, Clock, CalendarDays, ThumbsUp, Timer, CheckCircle, LogOut } from 'lucide-react';
 import { Badge } from '../components/Badge';
 import { SuggestionModal } from '../components/modals/SuggestionModal';
-import { CertificateModal } from '../components/modals/CertificateModal';
+
 import { getDaysDifference } from '../services/mocks';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const ProfileView = ({ user, events, suggestions, onAddSuggestion, onEventClick, onLogout, setUser }) => {
   const [showSuggestionModal, setShowSuggestionModal] = useState(false);
-  const [showCertificateModal, setShowCertificateModal] = useState(false);
+
 
   const enrolledEvents = events.filter(e => e.isEnrolled);
   const completedEvents = enrolledEvents.filter(e => getDaysDifference(e.date) < 0);
@@ -66,14 +66,10 @@ export const ProfileView = ({ user, events, suggestions, onAddSuggestion, onEven
           <p className="text-slate-400 text-sm mt-3 font-medium">Faltam <strong className="text-white">{user.totalHoursNeeded - user.hoursCompleted} horas</strong> para concluir o requisito.</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10 mt-6">
+        <div className="grid grid-cols-1 gap-4 relative z-10 mt-6">
           <button onClick={() => setShowSuggestionModal(true)} className="bg-slate-900/80 hover:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all group flex items-center gap-4 text-left shadow-sm">
             <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform flex-shrink-0"><Lightbulb size={24} /></div>
             <div><h3 className="text-white font-bold text-sm sm:text-base mb-0.5">Sugerir Evento</h3><p className="text-slate-400 text-xs line-clamp-2">Conhece um evento legal? Envie sua ideia.</p></div>
-          </button>
-          <button onClick={() => setShowCertificateModal(true)} className="bg-slate-900/80 hover:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 transition-all group flex items-center gap-4 text-left shadow-sm">
-            <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform flex-shrink-0"><UploadCloud size={24} /></div>
-            <div><h3 className="text-white font-bold text-sm sm:text-base mb-0.5">Enviar Certificado</h3><p className="text-slate-400 text-xs line-clamp-2">Valide horas extras de eventos externos.</p></div>
           </button>
         </div>
       </section>
@@ -190,7 +186,6 @@ export const ProfileView = ({ user, events, suggestions, onAddSuggestion, onEven
           onAddSuggestion(idea);
           setShowSuggestionModal(false);
         }} />}
-        {showCertificateModal && <CertificateModal onClose={() => setShowCertificateModal(false)} />}
       </AnimatePresence>
     </motion.div>
   );

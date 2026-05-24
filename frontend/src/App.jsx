@@ -9,7 +9,7 @@ import { ProfileView } from './views/ProfileView';
 import { ProfessorView } from './views/ProfessorView';
 import { EventModal } from './components/modals/EventModal';
 
-import { INITIAL_EVENTS, INITIAL_SUGGESTIONS, INITIAL_CERTS } from './services/mocks';
+import { INITIAL_EVENTS, INITIAL_SUGGESTIONS } from './services/mocks';
 import logoFlowUp from './assets/logoFlowUp.png';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
 
   const [events, setEvents] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
-  const [certs, setCerts] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -31,7 +31,7 @@ function App() {
       await new Promise(r => setTimeout(r, 500));
       setEvents(INITIAL_EVENTS);
       setSuggestions(INITIAL_SUGGESTIONS);
-      setCerts(INITIAL_CERTS);
+
       setIsLoading(false);
     };
     loadData();
@@ -133,7 +133,7 @@ function App() {
               <ProfileView key="profile" user={user} events={events} suggestions={suggestions} onAddSuggestion={handleAddSuggestion} onEventClick={setSelectedEvent} onLogout={handleLogout} setUser={setUser} />
             )
           ) : (
-            <ProfessorView key="professor" activeTab={activeTab} onLogout={handleLogout} events={events} setEvents={setEvents} certs={certs} setCerts={setCerts} suggestions={suggestions} setSuggestions={setSuggestions} />
+            <ProfessorView key="professor" activeTab={activeTab} onLogout={handleLogout} events={events} setEvents={setEvents} suggestions={suggestions} setSuggestions={setSuggestions} />
           )}
         </AnimatePresence>
       </main>
@@ -174,7 +174,7 @@ function App() {
                   <button onClick={() => setActiveTab('tarefas')} className={`flex flex-col items-center p-2 transition-colors ${activeTab === 'tarefas' ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-300 relative'}`}>
                     <CheckSquare size={24} className={activeTab === 'tarefas' ? 'drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]' : ''} />
                     <span className="text-[10px] font-bold mt-1">Tarefas</span>
-                    {(certs.length + suggestions.filter(s => s.status === 'pendente').length) > 0 && <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full animate-pulse"></span>}
+                    {(suggestions.filter(s => s.status === 'pendente').length) > 0 && <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full animate-pulse"></span>}
                   </button>
                 </li>
                 <li>

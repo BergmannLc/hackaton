@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalendarDays, Plus, Edit2, MapPin, User, FileCheck, Lightbulb, CheckCircle, Inbox, ThumbsUp, Trash2, CalendarPlus, LogOut, Check, Eye, Award, FileText, Timer, MessageSquare, QrCode } from 'lucide-react';
+import { CalendarDays, Plus, Edit2, MapPin, User, Lightbulb, CheckCircle, Inbox, ThumbsUp, Trash2, CalendarPlus, LogOut, Check, Award, Timer, MessageSquare, QrCode } from 'lucide-react';
 import { Badge } from '../components/Badge';
 import { EventFormModal } from '../components/modals/EventFormModal';
 import { AttendanceProfModal } from '../components/modals/AttendanceProfModal';
@@ -7,18 +7,8 @@ import { MOCK_PROF } from '../services/mocks';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
-export const ProfessorView = ({ activeTab, onLogout, events, setEvents, certs, setCerts, suggestions, setSuggestions }) => {
-  const [taskType, setTaskType] = useState('certificados');
+export const ProfessorView = ({ activeTab, onLogout, events, setEvents, suggestions, setSuggestions }) => {
   const [sugTab, setSugTab] = useState('pendentes');
-
-  const handleApproveCert = (id) => {
-    setCerts(prev => prev.filter(c => c.id !== id));
-    toast.success("Certificado validado e horas computadas!");
-  };
-  const handleRejectCert = (id) => {
-    setCerts(prev => prev.filter(c => c.id !== id));
-    toast.success("Certificado rejeitado.");
-  };
   
   const handleApproveSug = (id) => {
     setSuggestions(prev => prev.map(s => s.id === id ? { ...s, status: 'aprovada' } : s));
@@ -130,61 +120,6 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, certs, s
 
     return (
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="pb-24 pt-6 px-4 max-w-5xl mx-auto space-y-6">
-         <div className="flex bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800">
-            <button onClick={() => setTaskType('certificados')} className={`flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${taskType === 'certificados' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-500 hover:text-slate-300'}`}>
-              <FileCheck size={18}/> Certificados 
-              {certs.length > 0 && <span className="bg-amber-500 text-slate-950 px-2 py-0.5 rounded-full text-xs">{certs.length}</span>}
-            </button>
-            <button onClick={() => setTaskType('sugestoes')} className={`flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${taskType === 'sugestoes' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-500 hover:text-slate-300'}`}>
-              <Lightbulb size={18}/> Sugestões
-              {pendingSugs.length > 0 && <span className="bg-amber-500 text-slate-950 px-2 py-0.5 rounded-full text-xs">{pendingSugs.length}</span>}
-            </button>
-         </div>
-
-         <AnimatePresence mode="wait">
-         {taskType === 'certificados' ? (
-            <motion.div key="cert" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-               {certs.length === 0 ? (
-                  <div className="bg-slate-900 rounded-3xl p-12 text-center border border-slate-800 border-dashed">
-                    <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mx-auto mb-4"><CheckCircle size={40} /></div>
-                    <h3 className="text-xl font-bold text-white mb-2">Caixa de Entrada Limpa!</h3>
-                    <p className="text-slate-400">Todos os certificados já foram validados.</p>
-                  </div>
-               ) : (
-                 <AnimatePresence>
-                   {certs.map(cert => (
-                     <motion.div layout initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0, height: 0, marginBottom: 0}} key={cert.id} className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl p-5 sm:p-6 transition-all shadow-sm">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                           <div className="flex gap-4 items-center">
-                              <img src={cert.avatar} alt={cert.student} className="w-14 h-14 rounded-full border-2 border-slate-800" />
-                              <div>
-                                 <h4 className="text-white font-bold text-lg leading-tight">{cert.student}</h4>
-                                 <p className="text-sm text-slate-400">{cert.course}</p>
-                              </div>
-                           </div>
-                           <Badge variant="warning" className="flex items-center gap-1 text-sm py-1"><Timer size={14}/> {cert.hours}h Solicitadas</Badge>
-                        </div>
-                        <div className="bg-slate-950 rounded-2xl p-4 border border-slate-800/80 mb-5">
-                           <p className="text-slate-300 font-bold mb-1 flex items-center gap-2"><Award size={16} className="text-indigo-400"/> {cert.event}</p>
-                           <div className="flex items-center justify-between mt-3 bg-slate-900 p-3 rounded-xl border border-slate-800">
-                             <p className="text-xs text-slate-400 flex items-center gap-2 truncate"><FileText size={16} className="text-emerald-400 flex-shrink-0"/> {cert.file}</p>
-                             <button className="text-indigo-400 font-bold text-xs hover:text-indigo-300 flex items-center gap-1 flex-shrink-0 bg-indigo-500/10 px-3 py-1.5 rounded-lg ml-2"><Eye size={14}/> PDF</button>
-                           </div>
-                        </div>
-                        <div className="flex gap-3">
-                           <button onClick={() => handleApproveCert(cert.id)} className="flex-1 bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-600 hover:text-white hover:border-emerald-500 py-3 rounded-xl transition-all font-bold flex justify-center items-center gap-2 shadow-sm">
-                               <Check size={18}/> Validar Horas
-                           </button>
-                           <button onClick={() => handleRejectCert(cert.id)} className="px-5 bg-slate-800 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 py-3 rounded-xl border border-slate-700 transition-all flex items-center justify-center">
-                               <Trash2 size={18}/>
-                           </button>
-                        </div>
-                     </motion.div>
-                   ))}
-                 </AnimatePresence>
-               )}
-            </motion.div>
-         ) : (
             <motion.div key="sug" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-4">
                <div className="flex gap-4 border-b border-slate-800 pb-2 mb-4 px-2">
                  <button onClick={() => setSugTab('pendentes')} className={`text-sm font-bold pb-2 border-b-2 transition-all ${sugTab === 'pendentes' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Aguardando ({pendingSugs.length})</button>
@@ -259,8 +194,6 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, certs, s
                )}
                </AnimatePresence>
             </motion.div>
-         )}
-         </AnimatePresence>
          <AnimatePresence>
            {isEventModalOpen && <EventFormModal event={editingEvent} onClose={() => {setIsEventModalOpen(false); setEditingEvent(null);}} onSave={handleSaveEvent} />}
          </AnimatePresence>
@@ -275,13 +208,7 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, certs, s
         <p className="text-slate-400 mt-1 text-lg">Resumo das atividades e pendências do sistema hoje.</p>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-         <div className="bg-gradient-to-br from-amber-950/40 to-slate-900 border border-amber-900/30 rounded-3xl p-6 relative overflow-hidden group">
-            <div className="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/5 rounded-full blur-2xl"></div>
-            <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/20"><FileCheck size={24}/></div>
-            <h3 className="text-slate-300 text-sm font-bold uppercase tracking-wider mb-1">Aguardando Validação</h3>
-            <div className="text-4xl font-black text-white">{certs.length} <span className="text-lg font-medium text-slate-500">certificados</span></div>
-         </div>
+      <div className="grid grid-cols-1 gap-4">
          <div className="bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-900/30 rounded-3xl p-6 relative overflow-hidden group">
             <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-2xl"></div>
             <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20"><MessageSquare size={24}/></div>
