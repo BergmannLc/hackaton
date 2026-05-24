@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.database.models.UserEntity import User
+from app.database.models.UserCursosEntity import UserCursos
 
 class UserRepository:
 
@@ -20,6 +21,10 @@ class UserRepository:
         self.db.commit()
         self.db.refresh(user)
         return user
+
+    def save_user_curso(self, user_curso: UserCursos):
+        self.db.add(user_curso)
+        self.db.commit()
 
     def delete(self, user: User):
         self.db.delete(user)
