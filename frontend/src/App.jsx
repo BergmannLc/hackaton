@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, LayoutDashboard, CalendarPlus, CheckSquare, UserPlus } from 'lucide-react';
+import { Home, User, LayoutDashboard, CalendarPlus, CheckSquare, UserPlus, GraduationCap } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import { AnimatePresence } from 'framer-motion';
 
 import { AuthView } from './views/AuthView';
 import { HomeView } from './views/HomeView';
+import { HubView } from './views/HubView';
 import { ProfileView } from './views/ProfileView';
 import { ProfessorView } from './views/ProfessorView';
 import { EventModal } from './components/modals/EventModal';
@@ -49,19 +50,19 @@ function App() {
     setUser(null);
     setUserRole('aluno');
     setActiveTab('home');
-    toast('Você saiu da conta.', { icon: '👋' });
+    toast('Voce saiu da conta.', { icon: '👋' });
   };
 
   const handleEnroll = (eventId) => {
     setEvents(prevEvents => prevEvents.map(event => {
       if (event.id === eventId) {
         if (event.isEnrolled) {
-          toast('Inscrição cancelada.');
+          toast('Inscricao cancelada.');
           const updatedEvent = { ...event, isEnrolled: false, enrolled: event.enrolled - 1 };
           if (selectedEvent?.id === eventId) setSelectedEvent(updatedEvent);
           return updatedEvent;
         } else if (event.enrolled < event.spots) {
-          toast.success('Inscrição confirmada com sucesso!');
+          toast.success('Inscricao confirmada com sucesso!');
           const updatedEvent = { ...event, isEnrolled: true, enrolled: event.enrolled + 1 };
           if (selectedEvent?.id === eventId) setSelectedEvent(updatedEvent);
           return updatedEvent;
@@ -82,7 +83,7 @@ function App() {
       status: 'pendente'
     };
     setSuggestions([...suggestions, newSug]);
-    toast.success('Sua sugestão foi enviada para análise!');
+    toast.success('Sua sugestao foi enviada para analise!');
   };
 
   if (!isAuthenticated) {
@@ -129,6 +130,8 @@ function App() {
           {userRole === 'aluno' ? (
             activeTab === 'home' ? (
               <HomeView key="home" events={events} onEnroll={handleEnroll} onEventClick={setSelectedEvent} />
+            ) : activeTab === 'hub' ? (
+              <HubView key="hub" />
             ) : (
               <ProfileView key="profile" user={user} events={events} suggestions={suggestions} onAddSuggestion={handleAddSuggestion} onEventClick={setSelectedEvent} onLogout={handleLogout} setUser={setUser} />
             )
@@ -147,6 +150,12 @@ function App() {
                   <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center p-2 transition-colors ${activeTab === 'home' ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-300'}`}>
                     <Home size={24} className={activeTab === 'home' ? 'drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]' : ''} />
                     <span className="text-[10px] font-bold mt-1">Explorar</span>
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveTab('hub')} className={`flex flex-col items-center p-2 transition-colors ${activeTab === 'hub' ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-300'}`}>
+                    <GraduationCap size={24} className={activeTab === 'hub' ? 'drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]' : ''} />
+                    <span className="text-[10px] font-bold mt-1">Hub</span>
                   </button>
                 </li>
                 <li>

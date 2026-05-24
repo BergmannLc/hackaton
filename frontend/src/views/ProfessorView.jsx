@@ -322,93 +322,121 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, suggesti
     );
   }
 
+
   if (activeTab === 'tarefas') {
     const pendingSugs = suggestions.filter(s => s.status === 'pendente');
     const approvedSugs = suggestions.filter(s => s.status === 'aprovada');
 
     return (
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="pb-24 pt-6 px-4 max-w-5xl mx-auto space-y-6">
-            <motion.div key="sug" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-4">
-               <div className="flex gap-4 border-b border-slate-800 pb-2 mb-4 px-2">
-                 <button onClick={() => setSugTab('pendentes')} className={`text-sm font-bold pb-2 border-b-2 transition-all ${sugTab === 'pendentes' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Aguardando ({pendingSugs.length})</button>
-                 <button onClick={() => setSugTab('aprovadas')} className={`text-sm font-bold pb-2 border-b-2 transition-all ${sugTab === 'aprovadas' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Aprovadas ({approvedSugs.length})</button>
-               </div>
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2"><MessageSquare className="text-amber-400"/> Sugestões dos Alunos</h1>
+          <p className="text-slate-400 text-sm mt-1">Avalie ideias da comunidade e transforme-as em eventos.</p>
+        </div>
 
-               <AnimatePresence mode="wait">
-               {sugTab === 'pendentes' && (
-                 pendingSugs.length === 0 ? (
-                    <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="bg-slate-900 rounded-3xl p-12 text-center border border-slate-800 border-dashed">
-                      <div className="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-400 mx-auto mb-4"><Inbox size={40} /></div>
-                      <h3 className="text-xl font-bold text-white mb-2">Nenhuma sugestão nova</h3>
-                      <p className="text-slate-400">As ideias dos alunos aparecerão aqui.</p>
-                    </motion.div>
-                 ) : (
-                   <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="space-y-4">
-                     <AnimatePresence>
-                     {pendingSugs.map(sug => (
-                       <motion.div layout initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0, height: 0, marginBottom: 0}} key={sug.id} className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl p-5 sm:p-6 transition-all shadow-sm">
-                          <div className="flex items-center gap-3 mb-4 border-b border-slate-800 pb-4">
-                             <img src={sug.avatar} alt={sug.student} className="w-10 h-10 rounded-full" />
-                             <div><p className="text-sm text-slate-400">Enviado por <strong className="text-white">{sug.student}</strong></p><p className="text-xs text-slate-500">{sug.course}</p></div>
-                          </div>
-                          <div className="mb-5">
-                             <h4 className="text-white font-bold text-lg mb-2 flex items-center gap-2"><Lightbulb size={18} className="text-amber-400"/> {sug.title}</h4>
-                             <p className="text-slate-300 leading-relaxed bg-slate-950 p-4 rounded-xl border border-slate-800/80">{sug.description}</p>
-                          </div>
-                          <div className="flex gap-3">
-                             <button onClick={() => handleApproveSug(sug.id)} className="flex-1 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white py-3 rounded-xl transition-all font-bold flex justify-center items-center gap-2 shadow-sm">
-                                 <ThumbsUp size={18}/> Aprovar Ideia
-                             </button>
-                             <button onClick={() => handleRejectSug(sug.id)} className="px-5 bg-slate-800 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 py-3 rounded-xl border border-slate-700 transition-all flex items-center justify-center">
-                                 <Trash2 size={18}/>
-                             </button>
-                          </div>
-                       </motion.div>
-                     ))}
-                     </AnimatePresence>
-                   </motion.div>
-                 )
-               )}
+        <div className="flex gap-4 border-b border-slate-800 pb-2 mb-4 px-2">
+          <button onClick={() => setSugTab('pendentes')} className={`text-sm font-bold pb-2 border-b-2 transition-all ${sugTab === 'pendentes' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Aguardando ({pendingSugs.length})</button>
+          <button onClick={() => setSugTab('aprovadas')} className={`text-sm font-bold pb-2 border-b-2 transition-all ${sugTab === 'aprovadas' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>Aprovadas ({approvedSugs.length})</button>
+        </div>
 
-               {sugTab === 'aprovadas' && (
-                 approvedSugs.length === 0 ? (
-                    <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="text-center py-8"><p className="text-slate-500">Nenhuma ideia aprovada ainda.</p></motion.div>
-                 ) : (
-                   <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="space-y-4">
-                     {approvedSugs.map(sug => (
-                       <motion.div layout key={sug.id} className="bg-slate-900/50 border border-emerald-500/20 rounded-2xl p-5 transition-all shadow-sm flex items-center justify-between gap-4">
-                          <div>
-                             <Badge variant="success" className="mb-2 inline-block"><CheckCircle size={12} className="inline mr-1"/> Aprovada</Badge>
-                             <h4 className="text-white font-bold text-lg mb-1">{sug.title}</h4>
-                             <p className="text-sm text-slate-400">Ideia de <strong className="text-slate-300">{sug.student}</strong></p>
-                          </div>
-                          <button 
-                            onClick={() => {
-                              setEditingEvent({
-                                 title: sug.title, description: sug.description, suggestedBy: sug.student, category: 'Palestras',
-                                 date: '', time: '', location: '', hours: 2, spots: 50, speaker: '',
-                                 image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80', courses: ["Geral"]
-                              });
-                              setIsEventModalOpen(true);
-                            }} 
-                            className="bg-slate-800 text-white p-3 rounded-xl hover:bg-indigo-600 transition-colors shadow-sm" title="Transformar em Evento"
-                          >
-                             <CalendarPlus size={20}/>
-                          </button>
-                       </motion.div>
-                     ))}
-                   </motion.div>
-                 )
-               )}
-               </AnimatePresence>
-            </motion.div>
-         <AnimatePresence>
-           {isEventModalOpen && <EventFormModal event={editingEvent} onClose={() => {setIsEventModalOpen(false); setEditingEvent(null);}} onSave={handleSaveEvent} />}
-         </AnimatePresence>
+        {sugTab === 'pendentes' && (
+          pendingSugs.length === 0 ? (
+            <div className="bg-slate-900 rounded-3xl p-12 text-center border border-slate-800 border-dashed">
+              <div className="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-400 mx-auto mb-4"><Inbox size={40} /></div>
+              <h3 className="text-xl font-bold text-white mb-2">Nenhuma sugestão nova</h3>
+              <p className="text-slate-400">As ideias dos alunos aparecerão aqui.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {pendingSugs.map(sug => (
+                <div key={sug.id} className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl p-5 sm:p-6 transition-all shadow-sm">
+                  <div className="flex items-center gap-3 mb-4 border-b border-slate-800 pb-4">
+                    <img src={sug.avatar} alt={sug.student} className="w-10 h-10 rounded-full" />
+                    <div>
+                      <p className="text-sm text-slate-400">Enviado por <strong className="text-white">{sug.student}</strong></p>
+                      <p className="text-xs text-slate-500">{sug.course}</p>
+                    </div>
+                  </div>
+                  <div className="mb-5">
+                    <h4 className="text-white font-bold text-lg mb-2 flex items-center gap-2"><Lightbulb size={18} className="text-amber-400"/> {sug.title}</h4>
+                    <p className="text-slate-300 leading-relaxed bg-slate-950 p-4 rounded-xl border border-slate-800/80">{sug.description}</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setSuggestions(prev => prev.map(s => s.id === sug.id ? { ...s, status: 'aprovada' } : s));
+                        toast.success('Ideia aprovada!');
+                      }}
+                      className="flex-1 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-600 hover:text-white py-3 rounded-xl transition-all font-bold flex justify-center items-center gap-2 shadow-sm"
+                    >
+                      <ThumbsUp size={18}/> Aprovar Ideia
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSuggestions(prev => prev.filter(s => s.id !== sug.id));
+                        toast.success('Ideia removida.');
+                      }}
+                      className="px-5 bg-slate-800 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 py-3 rounded-xl border border-slate-700 transition-all flex items-center justify-center"
+                    >
+                      <Trash2 size={18}/>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        )}
+
+        {sugTab === 'aprovadas' && (
+          approvedSugs.length === 0 ? (
+            <div className="text-center py-8"><p className="text-slate-500">Nenhuma ideia aprovada ainda.</p></div>
+          ) : (
+            <div className="space-y-4">
+              {approvedSugs.map(sug => (
+                <div key={sug.id} className="bg-slate-900/50 border border-emerald-500/20 rounded-2xl p-5 transition-all shadow-sm flex items-center justify-between gap-4">
+                  <div>
+                    <Badge variant="success" className="mb-2 inline-block"><CheckCircle size={12} className="inline mr-1"/> Aprovada</Badge>
+                    <h4 className="text-white font-bold text-lg mb-1">{sug.title}</h4>
+                    <p className="text-sm text-slate-400">Ideia de <strong className="text-slate-300">{sug.student}</strong></p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setEditingEvent({
+                        title: sug.title,
+                        description: sug.description,
+                        suggestedBy: sug.student,
+                        category: 'Palestras',
+                        date: '',
+                        time: '',
+                        location: '',
+                        hours: 2,
+                        spots: 50,
+                        speaker: '',
+                        image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
+                        courses: ["Geral"],
+                      });
+                      setIsEventModalOpen(true);
+                    }}
+                    className="bg-slate-800 text-white p-3 rounded-xl hover:bg-indigo-600 transition-colors shadow-sm"
+                    title="Transformar em Evento"
+                  >
+                    <CalendarPlus size={20}/>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )
+        )}
+
+        <AnimatePresence>
+          {isEventModalOpen && <EventFormModal event={editingEvent} onClose={() => { setIsEventModalOpen(false); setEditingEvent(null); }} onSave={handleSaveEvent} />}
+        </AnimatePresence>
       </motion.div>
     );
   }
 
+  // ============ Default: Painel ============
+  const pendingCount = suggestions.filter(s => s.status === 'pendente').length;
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit" className="pb-24 pt-6 px-4 max-w-7xl mx-auto space-y-8">
       <section>
@@ -416,13 +444,25 @@ export const ProfessorView = ({ activeTab, onLogout, events, setEvents, suggesti
         <p className="text-slate-400 mt-1 text-lg">Resumo das atividades e pendências do sistema hoje.</p>
       </section>
 
-      <div className="grid grid-cols-1 gap-4">
-         <div className="bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-900/30 rounded-3xl p-6 relative overflow-hidden group">
-            <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-2xl"></div>
-            <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20"><MessageSquare size={24}/></div>
-            <h3 className="text-slate-300 text-sm font-bold uppercase tracking-wider mb-1">Novas Ideias</h3>
-            <div className="text-4xl font-black text-white">{suggestions.filter(s=>s.status==='pendente').length} <span className="text-lg font-medium text-slate-500">sugestões</span></div>
-         </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-900/30 rounded-3xl p-6 relative overflow-hidden group">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-2xl"></div>
+          <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20"><MessageSquare size={24}/></div>
+          <h3 className="text-slate-300 text-sm font-bold uppercase tracking-wider mb-1">Novas Ideias</h3>
+          <div className="text-4xl font-black text-white">{pendingCount} <span className="text-lg font-medium text-slate-500">sugestões</span></div>
+        </div>
+        <div className="bg-gradient-to-br from-emerald-950/40 to-slate-900 border border-emerald-900/30 rounded-3xl p-6 relative overflow-hidden group">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/5 rounded-full blur-2xl"></div>
+          <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/20"><CalendarDays size={24}/></div>
+          <h3 className="text-slate-300 text-sm font-bold uppercase tracking-wider mb-1">Eventos Cadastrados</h3>
+          <div className="text-4xl font-black text-white">{events.length} <span className="text-lg font-medium text-slate-500">eventos</span></div>
+        </div>
+        <div className="bg-gradient-to-br from-amber-950/40 to-slate-900 border border-amber-900/30 rounded-3xl p-6 relative overflow-hidden group">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/5 rounded-full blur-2xl"></div>
+          <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/20"><UserPlus size={24}/></div>
+          <h3 className="text-slate-300 text-sm font-bold uppercase tracking-wider mb-1">Professores</h3>
+          <div className="text-4xl font-black text-white">{professorsList.length} <span className="text-lg font-medium text-slate-500">cadastrados</span></div>
+        </div>
       </div>
     </motion.div>
   );
