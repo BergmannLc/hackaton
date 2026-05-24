@@ -1,5 +1,12 @@
+import os
+os.environ['PGCLIENTENCODING'] = 'utf8'
+os.environ['LC_ALL'] = 'C'
+os.environ['LANG'] = 'C'
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.database.db import engine, Base
+import app.database.models
 
 app = FastAPI()
 
@@ -11,9 +18,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/users")
-def get_users():
-    return [
-        {"id": 1, "name": "João"},
-        {"id": 2, "name": "Maria"},
-    ]
+Base.metadata.create_all(engine)
