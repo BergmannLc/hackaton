@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from app.database.db import Base
 
+
 class Eventos(Base):
     __tablename__ = "eventos"
 
@@ -16,5 +17,7 @@ class Eventos(Base):
     horas = Column(Integer, nullable=True)
     imagem = Column(String, nullable=True)
     max_user = Column(Integer, nullable=False)
+
+    # Sessao de presenca via QR Code (token rotativo com expiracao curta)
     qr_token = Column(String, nullable=True)
     qr_token_expiry = Column(DateTime, nullable=True)

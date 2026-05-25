@@ -1,4 +1,4 @@
-from app.database.models.UserEntity import User
+from app.database.models.UserEntity import User, RoleEnum
 from app.database.models.EventosEntity import Eventos
 from app.database.models.Cursos import Cursos
 from app.database.models.UserCursosEntity import UserCursos

@@ -14,7 +14,6 @@ import {
   HUB_LEVELS,
 } from '../services/mocks';
 
-// Mapeia partnerId -> objeto parceiro (para lookup rápido)
 const PARTNERS_BY_ID = HUB_PARTNERS.reduce((acc, p) => ({ ...acc, [p.id]: p }), {});
 
 // Paleta de cores aplicada a partners e trilhas (Tailwind safelist friendly).
@@ -33,9 +32,6 @@ const ACCENT_CLASSES = {
 
 const TRAIL_ICONS = { Code2, Heart, Rocket, Sparkles };
 
-// =================================================================
-// Modal de validação de horas (envio de certificado)
-// =================================================================
 const ValidateHoursModal = ({ course, onClose }) => {
   const [status, setStatus] = useState('idle');
 
@@ -117,9 +113,6 @@ const ValidateHoursModal = ({ course, onClose }) => {
   );
 };
 
-// =================================================================
-// Avatar do parceiro (sem imagem externa — só iniciais + cor)
-// =================================================================
 const PartnerBadge = ({ partner, size = 'sm' }) => {
   if (!partner) return null;
   const c = ACCENT_CLASSES[partner.accent] || ACCENT_CLASSES.indigo;
@@ -134,9 +127,6 @@ const PartnerBadge = ({ partner, size = 'sm' }) => {
   );
 };
 
-// =================================================================
-// Card de curso individual
-// =================================================================
 const CourseCard = ({ course, onStart, onValidate }) => {
   const partner = PARTNERS_BY_ID[course.partnerId];
 
@@ -210,9 +200,6 @@ const CourseCard = ({ course, onStart, onValidate }) => {
   );
 };
 
-// =================================================================
-// Card de Trilha (destaque visual)
-// =================================================================
 const TrailCard = ({ trail, onOpen }) => {
   const c = ACCENT_CLASSES[trail.accent] || ACCENT_CLASSES.indigo;
   const Icon = TRAIL_ICONS[trail.icon] || Sparkles;
@@ -252,9 +239,6 @@ const TrailCard = ({ trail, onOpen }) => {
   );
 };
 
-// =================================================================
-// Modal de detalhes da trilha
-// =================================================================
 const TrailDetailModal = ({ trail, onClose, onStart, onValidate }) => {
   if (!trail) return null;
   const c = ACCENT_CLASSES[trail.accent] || ACCENT_CLASSES.indigo;
@@ -344,9 +328,6 @@ const TrailDetailModal = ({ trail, onClose, onStart, onValidate }) => {
   );
 };
 
-// =================================================================
-// HubView principal
-// =================================================================
 export const HubView = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('Todos');

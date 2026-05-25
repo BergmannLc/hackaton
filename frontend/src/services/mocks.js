@@ -76,7 +76,7 @@ export const MOCK_STUDENTS = [
 ];
 
 export const INITIAL_EVENTS = [
-  // ============== CONCLUÍDOS ==============
+  // Eventos concluidos (historico)
   {
     id: 1001,
     title: "Introdução ao Git e GitHub na prática",
@@ -142,7 +142,7 @@ export const INITIAL_EVENTS = [
     courses: ["Engenharia de Software", "Sistemas de Informação"],
   },
 
-  // ============== HOJE / AMANHÃ ==============
+  // Eventos hoje ou amanha
   {
     id: 1005,
     title: "Atualizações em Cardiologia 2026",
@@ -193,7 +193,7 @@ export const INITIAL_EVENTS = [
     suggestedBy: "Lucas Bergmann",
   },
 
-  // ============== ESTA SEMANA ==============
+  // Eventos desta semana
   {
     id: 1008,
     title: "STF e o futuro do direito digital",
@@ -275,7 +275,7 @@ export const INITIAL_EVENTS = [
     courses: ["Engenharia de Software", "Sistemas de Informação"],
   },
 
-  // ============== PRÓXIMAS SEMANAS ==============
+  // Eventos das proximas semanas
   {
     id: 1013,
     title: "Saúde mental em ambientes acadêmicos",
@@ -566,9 +566,7 @@ export const INITIAL_SUGGESTIONS = [
   },
 ];
 
-// ======================================================================
-// HUB FlowUp — cursos assincronos patrocinados por parceiros institucionais
-// ======================================================================
+// Hub FlowUp -- cursos assincronos patrocinados por parceiros
 
 export const HUB_CATEGORIES = [
   "Todos",

@@ -1,7 +1,51 @@
+# ====== Variaveis de ambiente (NUNCA versionar) ======
 .env
+.env.local
+.env.*.local
 .envNew-Item
-.idea/
+
+# ====== Python ======
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
 .venv/
 venv/
+env/
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# ====== Node / Vite / React ======
+node_modules/
+dist/
+dist-ssr/
+build/
+.vite/
+*.local
+
+# ====== Logs ======
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+pnpm-debug.log*
+
+# ====== Editores e IDEs ======
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ====== OS ======
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ====== Outros ======
+*.bak
+*.tmp
+coverage/
+.eslintcache

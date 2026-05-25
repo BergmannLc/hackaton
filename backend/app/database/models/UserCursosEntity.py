@@ -3,7 +3,7 @@ from app.database.db import Base
 
 
 class UserCursos(Base):
-    __tablename__ = 'UserCursos'
+    __tablename__ = "user_cursos"
+
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     curso_id = Column(Integer, ForeignKey("cursos.id"), primary_key=True)
-
